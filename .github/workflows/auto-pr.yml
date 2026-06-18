@@ -6,7 +6,9 @@ on:
       - 'FIX'
       - 'fix*'
       - 'hotfix/*'
+      - 'feature'
       - 'feature/*'
+      - 'feat'
       - 'feat/*'
 
 permissions:
@@ -53,7 +55,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [[ "${{ github.ref_name }}" =~ ^(feature/|feat/) ]]; then
+          if [[ "${{ github.ref_name }}" =~ ^(feature|feat)($|/) ]]; then
             TITLE="Feat: ${{ github.ref_name }}"
             BODY="Pull request automático criado pela pipeline para a branch de funcionalidade ${{ github.ref_name }}."
           else
