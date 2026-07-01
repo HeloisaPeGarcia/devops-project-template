@@ -39,11 +39,13 @@ Utilizamos uma estratégia baseada em:
 **Regras de proteção:** Pull Requests exigem revisão de código e aprovação na pipeline de CI antes do merge.
 
 ### CI/CD Pipelines (GitHub Actions)
-* **CI (Continuous Integration)**: Disparado em PRs e pushes. Realiza o build da imagem Docker, roda testes automatizados e executa análises de segurança utilizando `Trivy`.
-* **CD (Continuous Deployment)**: Disparado no push para a branch `main`. Publica a imagem no GitHub Container Registry (GHCR) e realiza o deploy no Kubernetes nos ambientes de `staging` e, mediante aprovação manual, `production`.
+* **CI (Continuous Integration)**: Disparado em PRs e pushes. Realiza o build da imagem Docker multi-stage segura, roda testes automatizados unitários e de integração (Jest), valida o estilo do código (ESLint/Prettier) e atualiza a documentação.
+* **E2E Validation com Kubernetes**: A pipeline levanta um cluster efêmero usando o **KinD (Kubernetes in Docker)**, faz o deploy dos manifestos reais no runner do GitHub Actions e dispara testes de carga ponta a ponta contra os pods em execução, atestando a integridade da infraestrutura.
 
-### Infraestrutura como Código (IaC)
-A pasta `/infra` é reservada para automação de infraestrutura. Utilizamos ferramentas como Terraform para garantir a reprodutibilidade do ambiente na nuvem.
+### Infraestrutura como Código (IaC) e Orquestração
+A pasta `/infra` contém configurações reais e prontas para ambiente Enterprise:
+* **Terraform (`/infra/terraform`)**: Módulos para provisionamento de infraestrutura na AWS (VPC, ECS).
+* **Kubernetes (`/infra/k8s`)**: Manifestos declarativos profissionais contendo Deployment, Service, HorizontalPodAutoscaler (HPA) e Ingress.
 
 ## 📖 Documentação da API
 
@@ -89,14 +91,15 @@ Executado em: `2026-07-01 13:38:35 UTC` | Alvo: `http://localhost:3000/health` |
 
 ```text
 meu-projeto/
-├── .github/
-│   ├── workflows/        # Pipelines do GitHub Actions
-│   └── CODEOWNERS        # Definição de donos dos códigos para revisões
-├── infra/                # Scripts de IaC (Terraform / Pulumi)
-├── src/                  # Código-fonte da aplicação
-├── tests/                # Testes unitários e de integração
-├── Dockerfile            # Receita da imagem Docker
-└── docker-compose.yml    # Orquestração local de containers
+├── .github/workflows/    # Pipelines automatizados do GitHub Actions (CI/CD, auto-pr)
+├── infra/                # Infraestrutura como Código
+│   ├── k8s/              # Manifestos do Kubernetes (Deployment, Service, HPA, Ingress)
+│   └── terraform/        # Scripts Terraform para provisionamento em nuvem
+├── scripts/              # Scripts de automação (Load Test, Atualização do Readme)
+├── src/                  # Código-fonte da API Express e especificações Swagger
+├── tests/                # Suítes de testes unitários e de integração (Jest)
+├── Dockerfile            # Imagem Docker otimizada multi-stage (Non-Root User)
+└── package.json          # Dependências, scripts (lint, test, start) e configurações
 ```
 
 ## 🛡️ Boas Práticas e Segurança
