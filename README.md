@@ -45,6 +45,46 @@ Utilizamos uma estratégia baseada em:
 ### Infraestrutura como Código (IaC)
 A pasta `/infra` é reservada para automação de infraestrutura. Utilizamos ferramentas como Terraform para garantir a reprodutibilidade do ambiente na nuvem.
 
+## 📖 Documentação da API
+
+<!-- START_API_LIST -->
+### 📋 Endpoints da API Detectados via Swagger
+
+Abaixo estão listadas as rotas da API identificadas automaticamente a partir das especificações do OpenAPI/Swagger:
+
+| Método | Endpoint | Resumo | Descrição |
+| :--- | :--- | :--- | :--- |
+| **`GET`** | `/` | Página Inicial | Retorna informações básicas do status da API. |
+| **`GET`** | `/health` | Verificação de Saúde (Health Check) | Retorna o status atual do serviço para monitoramento. |
+
+<!-- END_API_LIST -->
+
+## ⚡ Testes de Performance & Carga
+
+Uma etapa automatizada realiza testes de carga na aplicação, registrando métricas de tempo de resposta e vazão diretamente abaixo:
+
+<!-- START_LOAD_TEST_RESULTS -->
+### ⚡ Relatório de Teste de Carga Automático
+
+Executado em: `2026-07-01 13:38:35 UTC` | Alvo: `http://localhost:3000/health` | Conexões: `10` | Duração: `6.01s`
+
+#### 📊 Resumo Métricas Principais
+| Métrica | Valor |
+| :--- | :--- |
+| **Requisições Totais** | 114.711 |
+| **Média de Requisições / Seg** | 19120.0 req/s |
+| **Taxa de Transferência (Throughput)** | 5.61 MB/s |
+| **Sucesso (Status 2xx)** | `100.0%` |
+| **Erros / Timeouts / Não-2xx** | 0 / 0 / 0 |
+
+#### ⏱️ Latência (Milissegundos)
+| Mínimo | Média | Mediana (p50) | p90 | p99 | Máximo |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 ms | 0.1 ms | 0 ms | 0 ms | 1 ms | 9 ms |
+
+*Nota: Os dados acima são coletados dinamicamente executando o autocannon na pipeline.* 
+<!-- END_LOAD_TEST_RESULTS -->
+
 ## 📂 Estrutura de Diretórios
 
 ```text

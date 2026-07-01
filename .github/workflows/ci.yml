@@ -2,27 +2,89 @@ name: CI
 
 on: [push, pull_request]
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run code linter
+        run: npm run lint
+
+      - name: Run unit & integration tests
+        run: npm test
+
+      - name: Create KinD Kubernetes Cluster
+        uses: helm/kind-action@v1.10.0
+        with:
+          cluster_name: kind
+
+      - name: Build Docker Image for Test
+        run: docker build -t app:latest .
+
+      - name: Load Image into KinD
+        run: kind load docker-image app:latest --name kind
+
+      - name: Set Local Image in K8s Manifest
+        run: |
+          sed -i 's|image: ghcr.io/username/repo:latest|image: app:latest|g' infra/k8s/deployment.yaml
+
+      - name: Deploy Manifests to KinD
+        run: |
+          kubectl apply -f infra/k8s/
+
+      - name: Wait for Deployment Rollout
+        run: |
+          kubectl rollout status deployment/app-deployment --timeout=120s
+
+      - name: Port-forward Kubernetes Service
+        run: |
+          kubectl port-forward service/app-service 3000:80 &
+          sleep 5
+
+      - name: Update Swagger API List
+        run: npm run update-apis
+
+      - name: Run Load Testing against Kubernetes Pods
+        env:
+          SKIP_SERVER_START: 'true'
+        run: npm run load-test
+
+      - name: Commit & Push dynamic documentation updates
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          if ! git diff --cached --quiet; then
+            git commit -m "docs: auto-update API endpoints and performance metrics [skip ci]"
+            git push
+          else
+            echo "Nenhuma mudança no README.md para salvar."
+          fi
+
       - name: Lint Dockerfile
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: Dockerfile
-      
-      - name: Build
-        run: docker build -t app .
-        
-      - name: Testes
-        run: docker run app npm test
-        
-      - name: Security scan
+
+      - name: Security scan (Trivy)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'app'
+          image-ref: 'app:latest'
           format: 'table'
           exit-code: '0'
           ignore-unfixed: true

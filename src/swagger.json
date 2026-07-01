@@ -1,0 +1,76 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Template API",
+    "version": "1.0.0",
+    "description": "Especificação Swagger neutra para servir de base em novos projetos."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor de Desenvolvimento Local"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Página Inicial",
+        "description": "Retorna informações básicas do status da API.",
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Template API de Exemplo"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "running"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Verificação de Saúde (Health Check)",
+        "description": "Retorna o status atual do serviço para monitoramento.",
+        "responses": {
+          "200": {
+            "description": "Serviço saudável",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "UP"
+                    },
+                    "uptime": {
+                      "type": "number",
+                      "example": 12.5
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "example": "2026-07-01T13:00:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
