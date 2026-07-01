@@ -68,21 +68,21 @@ Uma etapa automatizada realiza testes de carga na aplicação, registrando métr
 <!-- START_LOAD_TEST_RESULTS -->
 ### ⚡ Relatório de Teste de Carga Automático
 
-Executado em: `2026-07-01 13:38:35 UTC` | Alvo: `http://localhost:3000/health` | Conexões: `10` | Duração: `6.01s`
+Executado em: `2026-07-01 13:46:06 UTC` | Alvo: `http://localhost:3000/health` | Conexões: `10` | Duração: `5.01s`
 
 #### 📊 Resumo Métricas Principais
 | Métrica | Valor |
 | :--- | :--- |
-| **Requisições Totais** | 114.711 |
-| **Média de Requisições / Seg** | 19120.0 req/s |
-| **Taxa de Transferência (Throughput)** | 5.61 MB/s |
+| **Requisições Totais** | 5,219 |
+| **Média de Requisições / Seg** | 1043.8 req/s |
+| **Taxa de Transferência (Throughput)** | 316.86 KB/s |
 | **Sucesso (Status 2xx)** | `100.0%` |
 | **Erros / Timeouts / Não-2xx** | 0 / 0 / 0 |
 
 #### ⏱️ Latência (Milissegundos)
 | Mínimo | Média | Mediana (p50) | p90 | p99 | Máximo |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| 1 ms | 0.1 ms | 0 ms | 0 ms | 1 ms | 9 ms |
+| 1 ms | 9.1 ms | 4 ms | 32 ms | 65 ms | 83 ms |
 
 *Nota: Os dados acima são coletados dinamicamente executando o autocannon na pipeline.* 
 <!-- END_LOAD_TEST_RESULTS -->
